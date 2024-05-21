@@ -7,7 +7,6 @@ void main() {
   runApp(const Homojenizator());
 }
 
-
 class Homojenizator extends StatelessWidget {
   const Homojenizator({super.key});
 
@@ -57,7 +56,7 @@ class HomePage extends StatelessWidget {
                 );
               },
               child: Container(
-                margin: const EdgeInsets.only(top:100),
+                margin: const EdgeInsets.only(top: 100),
                 padding: const EdgeInsets.all(16),
                 width: 250,
                 height: 175,
@@ -77,7 +76,7 @@ class HomePage extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(width: 8,height: 30),
+                        SizedBox(width: 8, height: 30),
                         Icon(
                           Icons.bluetooth,
                           color: Color(0xFFDCEDC8),
@@ -100,18 +99,18 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                   ],
-                 ),
                 ),
               ),
+            ),
             GestureDetector(
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const VeriGirisi()),
+                  MaterialPageRoute(builder: (context) => VeriGirisi(bluetoothConnection: BluetoothCls.connection)),
                 );
               },
               child: Container(
-                margin: const EdgeInsets.only(top:100),
+                margin: const EdgeInsets.only(top: 100),
                 padding: const EdgeInsets.all(16),
                 width: 250,
                 height: 175,
@@ -131,7 +130,7 @@ class HomePage extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(width: 8,height: 30),
+                        SizedBox(width: 8, height: 30),
                         Icon(
                           Icons.account_tree_outlined,
                           color: Color(0xFFDCEDC8),
@@ -159,9 +158,7 @@ class HomePage extends StatelessWidget {
             ),
           ],
         ),
-      )
+      ),
     );
   }
 }
-
-
