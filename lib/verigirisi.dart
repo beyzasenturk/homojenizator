@@ -5,13 +5,13 @@ import 'dart:typed_data';
 
 class VeriGirisi extends StatelessWidget {
   final BluetoothConnection? bluetoothConnection;
+  final BluetoothDevice? connectedDevice;
 
-  const VeriGirisi({Key? key, this.bluetoothConnection}) : super(key: key);
+  const VeriGirisi({Key? key, this.bluetoothConnection, this.connectedDevice}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController hizController = TextEditingController();
-    final TextEditingController yonController = TextEditingController();
+    final TextEditingController veriController = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(title: const Text('Veri Girişi')),
@@ -20,22 +20,24 @@ class VeriGirisi extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
-              controller: hizController,
-              decoration: const InputDecoration(labelText: 'Hız'),
+            Text(
+              connectedDevice != null ? 'Bağlı Cihaz: ${connectedDevice!.name}' : 'Cihaz Bağlı Değil',
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
+            const SizedBox(height: 20),
             TextField(
-              controller: yonController,
-              decoration: const InputDecoration(labelText: 'Yön'),
+              controller: veriController,
+              decoration: const InputDecoration(labelText: 'Veri'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                String hiz = hizController.text;
-                String yon = yonController.text;
-
                 if (bluetoothConnection != null && bluetoothConnection!.isConnected) {
-                  bluetoothConnection!.output.add(Uint8List.fromList(utf8.encode('$hiz,$yon\n')));
+                  String data = veriController.text;
+                  bluetoothConnection!.output.add(Uint8List.fromList(utf8.encode(data)));
+                  print('Veri gönderildi: $data');
+                } else {
+                  print('Cihaz bağlı değil');
                 }
               },
               child: const Text('Gönder'),
