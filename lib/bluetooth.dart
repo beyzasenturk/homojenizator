@@ -6,7 +6,7 @@ class BluetoothCls extends StatefulWidget {
   static BluetoothConnection? connection;
   static BluetoothDevice? connectedDevice;
 
-  const BluetoothCls({super.key});
+  const BluetoothCls({Key? key}) : super(key: key);
 
   @override
   _BluetoothClsState createState() => _BluetoothClsState();
@@ -16,8 +16,6 @@ class _BluetoothClsState extends State<BluetoothCls> {
   BluetoothState _bluetoothState = BluetoothState.UNKNOWN;
   List<BluetoothDevice> _devicesList = [];
   List<BluetoothDiscoveryResult> _scanResults = [];
-  BluetoothDevice? _device;
-  bool _connected = false;
   bool _isDiscovering = false;
 
   @override
@@ -63,8 +61,8 @@ class _BluetoothClsState extends State<BluetoothCls> {
 
   @override
   void dispose() {
-    if (_connected) {
-      BluetoothCls.connection?.close();
+    if (BluetoothCls.connection != null) {
+      BluetoothCls.connection!.close();
     }
     super.dispose();
   }
@@ -93,36 +91,38 @@ class _BluetoothClsState extends State<BluetoothCls> {
       ),
       body: ListView(
         children: _allDevices.map((device) {
-          return ListTile(
-            title: Text(device.name ?? ''),
-            subtitle: Text(device.address),
-            onTap: () async {
-              try {
-                print('Bağlanmaya çalışılıyor: ${device.address}');
-                BluetoothConnection connection = await BluetoothConnection.toAddress(device.address);
-                setState(() {
-                  BluetoothCls.connection = connection;
-                  BluetoothCls.connectedDevice = device;
-                  _connected = true;
-                });
-                print('Bağlantı başarılı: ${device.name} (${device.address})');
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => VeriGirisi(
-                      bluetoothConnection: BluetoothCls.connection,
-                      connectedDevice: BluetoothCls.connectedDevice,
+          // Cihaz adı var mı kontrol et
+          if (device.name != null && device.name!.isNotEmpty) {
+            return ListTile(
+              title: Text(device.name!),
+              subtitle: Text(device.address),
+              onTap: () async {
+                try {
+                  print('Bağlanmaya çalışılıyor: ${device.address}');
+                  BluetoothConnection connection = await BluetoothConnection.toAddress(device.address!);
+                  setState(() {
+                    BluetoothCls.connection = connection;
+                    BluetoothCls.connectedDevice = device;
+                  });
+                  print('Bağlantı başarılı: ${device.name} (${device.address})');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => VeriGirisi(
+                        bluetoothConnection: BluetoothCls.connection,
+                        connectedDevice: BluetoothCls.connectedDevice,
+                      ),
                     ),
-                  ),
-                );
-              } catch (e) {
-                setState(() {
-                  _connected = false;
-                });
-                print('Bağlantı hatası: $e');
-              }
-            },
-          );
+                  );
+                } catch (e) {
+                  print('Bağlantı hatası: $e');
+                }
+              },
+            );
+          } else {
+            // Cihaz adı yoksa ListTile oluşturma
+            return SizedBox.shrink();
+          }
         }).toList(),
       ),
     );
