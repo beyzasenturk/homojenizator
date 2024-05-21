@@ -33,8 +33,9 @@ class VeriGirisi extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 if (bluetoothConnection != null && bluetoothConnection!.isConnected) {
-                  bluetoothConnection!.output.add(Uint8List.fromList(utf8.encode('e')));
-                  print('Veri gönderildi: d');
+                  String data = veriController.text;
+                  bluetoothConnection!.output.add(Uint8List.fromList(utf8.encode(data)));
+                  print('Veri gönderildi: $data');
                 } else {
                   print('Cihaz bağlı değil');
                 }
